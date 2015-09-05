@@ -27,7 +27,6 @@ if os.path.isfile(netFile):
 else:
 #    global net
     print "creating new Network"
-    net = buildNetwork(784, HiddenNeurons, 10)
 
 
 # creating the supervised dataset
@@ -35,6 +34,7 @@ ds = SupervisedDataSet(784, 10)
 
 trainingData, validationData, testData = mnist_loader.load_data_wrapper()
 
+# initiating / loading the dataset in the right format for pyBrain
 def initTestDataSet():
     print "initiating dataset"
     for pic, ans in trainingData:
@@ -44,12 +44,14 @@ def initTestDataSet():
 initTestDataSet()
 trainer = BackpropTrainer(net, ds)
 
+# training the network for one epoch FIXME: for some reason no noticeable effect
 def Training():
     print "training"
     for i in range(trainLength):
         print trainer.train()
         print "%d / %d" % (i+1, trainLength)
 
+# testing as to how correct the net currently is -> usually about ~10% at initial
 def evaluate(testingData):
     print "testing"
     correct = 0
@@ -60,10 +62,12 @@ def evaluate(testingData):
 
 
 for i in range(numEpochs): 
-
-    print ("Epoch %02d: %d von %d Ziffern richtig erkannt." % (i, evaluate(testData), len(testData) ) )
-
+    # printing the current status as to how good it is right now
+    print ("Epoch %02d: got %d from %d digits correct." % (i, evaluate(testData), len(testData) ) )
+    # writing progress to file
     with open(netFile, "wb") as f:
         pickle.dump(net, f)
-
+    # training the net further
     Training()
+
+print ("Finish: got %d from %d digits correct." % (evaluate(validationData), len(validationData) ) )

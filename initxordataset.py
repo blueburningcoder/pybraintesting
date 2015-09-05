@@ -1,3 +1,4 @@
+# coding: utf-8
 from pybrain.datasets import SupervisedDataSet
 
 ds = SupervisedDataSet(2, 1)

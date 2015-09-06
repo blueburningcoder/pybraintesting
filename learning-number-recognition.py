@@ -13,12 +13,24 @@ HiddenNeurons = 40
 # number of training-iterations over the database, and tests inbetween
 numEpochs = 30
 # file the net should be saved in
-netFile = "net3.p"
-learningRate = 0.042
+netFile = "net0.p"
+learningRate = 0.043        # best for SigmoidLayer and 40 Neurons is 0.043 -> ~92%
 net = buildNetwork(784, HiddenNeurons, 10, bias = True, hiddenclass = SigmoidLayer)
 debug = True
 
 import os.path
+
+
+def getFileName():
+    name = netFile
+    it = 0
+    while (True):
+        if os.path.isfile(name):
+            name = "net%d.p" % it
+            it += 1
+        else:
+            return name
+
 
 if os.path.isfile(netFile) and not debug:
     print "loading already existing ANN"
@@ -48,13 +60,12 @@ trainer = BackpropTrainer(net, ds, learningrate = learningRate, verbose = True)
 
 # training the network for one epoch 
 def Training():
-    # trainer = BackpropTrainer(net, ds) # useful at all?
     print "training with learning rate %0.3f" % learningRate
     trainer.train()
 
 # testing as to how correct the net currently is for two different sets -> usually about ~10% at initial
 def evaluate():
-    print "---- ---- Testing ---- ----"
+    print "---- ---- --- Testing --- ---- ---- (%s)" % netFile
     correct = 0
     correctVal = 0
     for test, ans in testData:
@@ -65,6 +76,8 @@ def evaluate():
             correctVal += 1
     return correct, correctVal
 
+
+netFile = getFileName()
 
 for i in range(numEpochs): 
     # printing the current status, including test results and training status
@@ -79,4 +92,6 @@ for i in range(numEpochs):
     Training()
 
 endres1, endres2 = evaluate()
-print ("Finish: got %d/%d and %d/%d digits correct." % (endres1, len(testData), endres2, len(validationData) ) )
+percent = (endres1 + endres2) / (len(testData) + (len(validationData) / 1.0) )
+percentstr = str(percent * 100) + '%'
+print ("Finish: got %d/%d and %d/%d digits correct. (%s) (%s)" % (endres1, len(testData), endres2, len(validationData), percentstr, netFile) )

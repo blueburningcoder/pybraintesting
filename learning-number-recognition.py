@@ -1,5 +1,6 @@
 # coding: utf-8
 from pybrain.tools.shortcuts import buildNetwork
+from pybrain.structure import TanhLayer, SigmoidLayer, SoftmaxLayer
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.datasets import SupervisedDataSet
 import cPickle as pickle
@@ -9,14 +10,12 @@ import random
 
 # useful for something betweeen 30 and 100
 HiddenNeurons = 40
-# number of training-iterations over the database
+# number of training-iterations over the database, and tests inbetween
 numEpochs = 30
-trainLength = 100
 # file the net should be saved in
 netFile = "net3.p"
-batchSize = 10
-learningRate = 0.035
-net = buildNetwork(784, HiddenNeurons, 10)
+learningRate = 0.042
+net = buildNetwork(784, HiddenNeurons, 10, bias = True, hiddenclass = SigmoidLayer)
 debug = True
 
 import os.path
@@ -28,7 +27,7 @@ if os.path.isfile(netFile) and not debug:
         net = pickle.load(f)
 else:
 #    global net
-    print "creating new Network"
+    print "creating new Network, %d neurons hidden" % HiddenNeurons
 
 
 # creating the supervised dataset
@@ -44,18 +43,18 @@ def initTestDataSet():
 
 initTestDataSet()
 
-trainer = BackpropTrainer(net, ds, learningRate, verbose = True)
-random.seed()
+trainer = BackpropTrainer(net, ds, learningrate = learningRate, verbose = True)
+# random.seed()
 
-# training the network for one epoch FIXME: for some reason no noticeable effect
+# training the network for one epoch 
 def Training():
     # trainer = BackpropTrainer(net, ds) # useful at all?
-    print "training with training rate %0.3f" % learningRate
-    print trainer.train()
+    print "training with learning rate %0.3f" % learningRate
+    trainer.train()
 
-# testing as to how correct the net currently is -> usually about ~10% at initial
+# testing as to how correct the net currently is for two different sets -> usually about ~10% at initial
 def evaluate():
-    print "testing"
+    print "---- ---- Testing ---- ----"
     correct = 0
     correctVal = 0
     for test, ans in testData:
@@ -68,7 +67,7 @@ def evaluate():
 
 
 for i in range(numEpochs): 
-    # printing the current status as to how good it is right now
+    # printing the current status, including test results and training status
     (res1, res2) = evaluate()
     percent = (res1 + res2) / (len(testData) + (len(validationData) / 1.0) )
     percent *= 100

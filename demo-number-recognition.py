@@ -4,7 +4,7 @@ import cPickle as pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
-netFile = "net.p"
+netFile = "net3.p"
 
 global net
 
@@ -61,13 +61,15 @@ def onmouse(event):
         # send picture through neuronal net
         # act = feedforward(image.reshape(784,1))[-1]
         act = net.activate(image.reshape(784) )
-        print "sending through net ... try %d " % run
-        run += 1 
-        print("%d" % np.argmax(act) + ": " + ", ".join([ stripzero("%1.4f" % a) for a in act ]))
+#        print "sending through net ... try %d " % run
+#        run += 1 
+        print("%d" % np.argmax(act) + ": " + ", ".join([ stripzero("%1.4f" % a) for a in act ]) + 
+            "  ||  (%1.4f) %d" % (act[np.argmax(act)], np.argmax(act) ) )
     else:
         oldpos = None
         # Reset picture at right click
         if event.button == 3:
+            print "R: -.---- -.---- -.---- -.---- -.---- RESET -.---- -.---- -.---- -.---- -.---- "
             image = np.zeros( (28, 28) )
             im.set_data(image)
             ax.draw_artist(im)

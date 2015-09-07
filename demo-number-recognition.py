@@ -4,7 +4,7 @@ import cPickle as pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
-netFile = "net3.p"
+netFile = "best.net"
 
 global net
 

@@ -15,9 +15,11 @@ numEpochs = 30
 # file the net should be saved in
 netFile = "net0.p"
 learningRate = 0.043        # best for SigmoidLayer and 40 Neurons is 0.043 -> ~92%
-learningRateDecay = 1.0 #0.95 # the usual one is 1.0 so why does it go wrong with sth. slightly below?
-Momentum = 0.025  # the amount as to which the gradient descent from the last timestamp is used
-weightDecay = 0.015  # the amount as to which the weights are decreased
+learningRateDecay = 1.000 #0.95 # the usual one is 1.0 so why does it go wrong with sth. slightly below?
+Momentum = 0.035  # the amount as to which the gradient descent from the last timestamp is used
+# 0.035 seems quite good
+weightDecay = 0.003 # the amount as to which the connection weights are decreased
+# a small one seems to be the optimum, around 0.001 - 0.010 ?
 net = buildNetwork(784, HiddenNeurons, 10, bias = True, hiddenclass = SigmoidLayer)
 debug = True
 

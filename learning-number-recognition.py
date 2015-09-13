@@ -16,9 +16,9 @@ numEpochs = 30
 netFile = "net0.p"
 learningRate = 0.043        # best for SigmoidLayer and 40 Neurons is 0.043 -> ~92%
 learningRateDecay = 1.000 #0.95 # the usual one is 1.0 so why does it go wrong with sth. slightly below?
-Momentum = 0.035  # the amount as to which the gradient descent from the last timestamp is used
+Momentum = 0.040  # the amount as to which the gradient descent from the last timestamp is used
 # 0.035 seems quite good
-weightDecay = 0.003 # the amount as to which the connection weights are decreased
+weightDecay = 0.00009# the amount as to which the connection weights are decreased
 # a small one seems to be the optimum, around 0.001 - 0.010 ?
 net = buildNetwork(784, HiddenNeurons, 10, bias = True, hiddenclass = SigmoidLayer)
 debug = True
@@ -65,7 +65,7 @@ trainer = BackpropTrainer(net, ds, learningrate = learningRate, lrdecay=learning
 
 # training the network for one epoch 
 def Training():
-    print "training with learning rate %0.3f and decay %0.3f, a momentum of %0.3f and a weightdecay of %0.3f" % (learningRate, learningRateDecay, Momentum, weightDecay)
+    print "training with learning rate %0.3f and decay %0.3f a momentum of %0.3f and a weightdecay of %0.6f" % (learningRate, learningRateDecay, Momentum, weightDecay)
     trainer.train()
 
 # testing as to how correct the net currently is for two different sets -> usually about ~10% at initial
